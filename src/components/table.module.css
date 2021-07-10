@@ -1,0 +1,15 @@
+table, th, td {
+  border: 1px solid black;
+  border-collapse: collapse;
+  width: 100%;
+}
+
+table.table-sortable th.currently-sorted[data-sort-dir="asc"]::after {
+  content: "\25b2";
+  font-size: 12px;
+}
+
+table.table-sortable th.currently-sorted[data-sort-dir="desc"]::after {
+  content: "\25bc";
+  font-size: 12px;
+}
