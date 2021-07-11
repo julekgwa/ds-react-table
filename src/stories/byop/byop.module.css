@@ -1,0 +1,28 @@
+body {
+  background: #FFF;
+}
+/* styling the table */
+table, td {
+  border: 1px solid #353535;
+  padding-left: 5px;
+  margin-bottom: 15px;
+}
+
+th {
+background-color: #3B3B3B;
+text-align: left;
+padding-left: 5px;
+}
+
+table {
+  width: 100%;
+  font-family: monospace;
+  border-collapse: collapse;
+  background-color: #2B2B2B;
+  color: #94ABBE;
+}
+
+a:not(:nth-child(2)) {
+  background-color: white !important;
+  color: #94ABBE;
+}

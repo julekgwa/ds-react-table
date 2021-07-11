@@ -13,7 +13,7 @@ import {
   createHeaders
 } from './utils';
 
-export function Table({ data, sort , pageLimit , }) {
+export function Table({ data, sort, dataLimit, showPagination, }) {
 
   const [tableHeaders, setTableHeaders] = useState([]);
   const [tableData, setTableData] = useState([]);
@@ -21,6 +21,9 @@ export function Table({ data, sort , pageLimit , }) {
   const [sortDir, setSortDir] = useState('');
   const [totalPages, setTotalPages] = useState(1);
   const [currentPage, setCurrentPage] = useState(1);
+  const [startIndex, setStartIndex] = useState(0);
+  const [endIndex, setEndIndex] = useState(dataLimit);
+  const [nextButtonText, setNextButtonText] = useState('NEXT');
 
   const sortTable = (sortBy) => {
 
@@ -29,30 +32,78 @@ export function Table({ data, sort , pageLimit , }) {
       return;
 
     }
-    const sortDirection = sortBy !== currentSort ? 'asc': sortDir === 'asc' ? 'desc' : 'asc';
-    const tempData = [...data];
-    tempData.sort((a, b) => compare(a, b, sortBy, sortDirection))
+    const sortDirection =
+      sortBy !== currentSort ? 'asc' : sortDir === 'asc' ? 'desc' : 'asc';
+    const tempData = [...tableData];
+    tempData.sort((a, b) => compare(a, b, sortBy, sortDirection));
     setSortDir(sortDirection);
     setCurrentSort(sortBy);
     setTableData(addUniqueKey(tempData));
 
-  }
+  };
 
-  const nextPage = () => {
+  const nextPage = (e) => {
 
-    if (currentPage < totalPages) {
+    e.preventDefault();
 
-      setCurrentPage(currentPage + 1);
+    if (currentPage === totalPages) {
+
+      return;
 
     }
+    const nextPageNumber =
+      currentPage < totalPages ? currentPage + 1 : currentPage;
+    const nextStartIndex = startIndex + dataLimit;
+    const nextEndIndex = nextPageNumber * dataLimit;
 
-  }
+    const newTableData = data.slice(nextStartIndex, nextEndIndex);
+    if (currentSort) {
 
-  const prevPage = () => {
+      newTableData.sort((a, b) => compare(a, b, currentSort, sortDir));
 
-    if (currentPage > 1) {
+    }
+    setNextButtonText(nextPageNumber === totalPages ? 'PREV' : 'NEXT');
+    setTableData(addUniqueKey(newTableData));
+    setCurrentPage(nextPageNumber);
+    setStartIndex(nextStartIndex);
+    setEndIndex(nextEndIndex);
 
-      setCurrentPage(currentPage - 1);
+  };
+
+  const prevPage = (e) => {
+
+    e.preventDefault();
+    if (currentPage <= 1) {
+
+      return;
+
+    }
+    const nextPageNumber = currentPage - 1;
+    const nextStartIndex = startIndex - dataLimit;
+    const nextEndIndex = nextPageNumber * dataLimit;
+    const newTableData = data.slice(nextStartIndex, nextEndIndex);
+    if (currentSort) {
+
+      newTableData.sort((a, b) => compare(a, b, currentSort, sortDir));
+
+    }
+    setNextButtonText(nextPageNumber === 1 ? 'NEXT' : 'PREV');
+    setTableData(addUniqueKey(newTableData));
+    setCurrentPage(nextPageNumber);
+    setStartIndex(nextStartIndex);
+    setEndIndex(nextEndIndex);
+
+  };
+
+  const nextButton = (e) => {
+
+    if (nextButtonText === 'NEXT') {
+
+      nextPage(e);
+
+    } else {
+
+      prevPage(e);
 
     }
 
@@ -60,45 +111,78 @@ export function Table({ data, sort , pageLimit , }) {
 
   useEffect(() => {
 
-    setTableData(addUniqueKey(data));
+    setTableData(addUniqueKey(data.slice(startIndex, endIndex)));
     setTableHeaders(createHeaders(data));
-    setTotalPages(Math.ceil(data.length / pageLimit));
+    setTotalPages(Math.ceil(data.length / dataLimit));
 
-  }, [data])
+  }, [data]);
 
-  return (<div><table className='table-sortable'>
-    <thead>
-      <tr>
-        {tableHeaders.map((header, idx) => (
-          <th data-sort-dir={`${header.accessor === currentSort ? sortDir : ''}`} className={`${header.accessor === currentSort ? 'currently-sorted' : ''}`} onClick={() => sortTable(header.accessor)} key={idx}>{header.Header}</th>
-        ))}
-      </tr>
-    </thead>
-    <tbody>
-      {tableData.map((row, idx) => (
-        <tr key={row.key}>
-          {tableHeaders.map((h, i) => (
-            <td key={row.key + i}>{tableData[idx][h.accessor]}</td>
+  return (
+    <div>
+      <table className='table-sortable'>
+        <thead>
+          <tr>
+            {tableHeaders.map((header, idx) => (
+              <th
+                data-sort-dir={`${
+                  header.accessor === currentSort ? sortDir : ''
+                }`}
+                className={`${
+                  header.accessor === currentSort ? 'currently-sorted' : ''
+                }`}
+                onClick={() => sortTable(header.accessor)}
+                key={idx}
+              >
+                {header.Header}
+              </th>
+            ))}
+          </tr>
+        </thead>
+        <tbody>
+          {tableData.map((row, idx) => (
+            <tr key={row.key}>
+              {tableHeaders.map((h, i) => (
+                <td key={row.key + i}>{tableData[idx][h.accessor]}</td>
+              ))}
+            </tr>
           ))}
-        </tr>
-      ))}
-    </tbody>
-  </table>
-  <div>
-    <p><span onClick={prevPage}>&#60; </span><span>{` ${currentPage}/${totalPages} `}</span><span onClick={nextPage}> &#62;</span></p>
-  </div>
-  </div>);
+        </tbody>
+      </table>
+      { (showPagination && totalPages !== 1) && (
+        <div className='pagination'>
+          <a onClick={prevPage} href='#'>
+            &laquo;
+          </a>
+          <a onClick={nextButton} href='#'>{nextButtonText}</a>
+          <a onClick={(e) => e.preventDefault()} href=''>
+            {currentPage}
+          </a>
+          <a onClick={(e) => e.preventDefault()} href=''>
+            /
+          </a>
+          <a onClick={(e) => e.preventDefault()} href=''>
+            {totalPages}
+          </a>
+          <a onClick={nextPage} href='#'>
+            &raquo;
+          </a>
+        </div>
+      )}
+    </div>
+  );
 
 }
 
 Table.propTypes = {
   data: PropTypes.array.isRequired,
   sort: PropTypes.bool,
-  pageLimit: PropTypes.number,
+  dataLimit: PropTypes.number,
+  showPagination: PropTypes.bool,
 };
 
 Table.defaultProps = {
   data: [],
   sort: false,
-  pageLimit: 2,
+  dataLimit: 10,
+  showPagination: false,
 };

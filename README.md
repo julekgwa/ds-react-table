@@ -24,16 +24,166 @@ import React from 'react';
 
 import { Table } from 'ds-react-table';
 
+const data = [
+  {
+    language: 'JavaScript',
+    level: '5',
+  },
+  {
+    language: 'NodeJS',
+    level: '3',
+  },
+  {
+    language: 'React',
+    level: '5',
+  },
+  {
+    language: 'React Native',
+    level: '5',
+  },
+  {
+    language: 'Vue',
+    level: '3',
+  }
+];
+
 function App() {
   return (
     <div className="App">
-      <Table data={[{name: 'Jay', skill: 'Software Engineering'}]} />
+      <Table
+        dataLimit={15}
+        sort={false}
+        showPagination={true}
+        data={data}
+      />
     </div>
   );
 }
 
 export default App;
 ```
+
+![toggle](images/ds-table.png)
+
+## API
+
+| Prop           | Type             | Default   | Description                                                                           |   |
+|----------------|------------------|-----------|---------------------------------------------------------------------------------------|---|
+| data      | array             | Required     | Array of objects to be displayed in a table |   |
+| sort        | bool             | false  |  To enable sorting                                       |   |
+| dataLimit       | number             | 10  | The number of items to be shown on each page.                                                    |   |
+| showPagination | bool             | false     | Show/hide pagination                                   |   |
+
+## Styling the table and pagination
+
+```css
+/* table.module.css */
+body {
+  background: #1d1e22;
+}
+/* styling the table */
+table, td {
+  border: 1px solid #353535;
+  padding-left: 5px;
+}
+
+th {
+background-color: #3B3B3B;
+text-align: left;
+padding-left: 5px;
+}
+
+table {
+  width: 100%;
+  font-family: monospace;
+  border-collapse: collapse;
+  background-color: #2B2B2B;
+  color: #94ABBE;
+}
+
+/* styling pagination */
+
+.pagination {
+  display: inline-block;
+  background-color: #94ABBE;
+  border: 1px solid #3B3B3B;
+  margin-top: 10px;
+}
+
+a:not(:nth-child(2)) {
+  background-color: #3B3B3B;
+  color: #94ABBE;
+}
+```
+
+```Javascript
+import React from 'react';
+
+import { Table } from 'ds-react-table';
+
+// import css file
+
+import './table.module.css';
+
+function App() {
+  return (
+    <div className="App">
+      <Table
+        dataLimit={15}
+        sort={false}
+        showPagination={true}
+        data={data}
+      />
+    </div>
+  );
+}
+
+export default App;
+```
+
+![toggle](images/styled.png)
+
+## BYOP (bring your own pagination)
+
+This example uses [rc-pagination](https://github.com/react-component/pagination)
+```Javascript
+import React, {useState}> from 'react';
+
+import { Table } from 'ds-react-table';
+
+import Pagination from 'rc-pagination';
+import 'rc-pagination/assets/index.css';
+
+function App() {
+  const countPerPage = 2;
+  const [currentPage, setCurrentPage] = useState(1);
+  const [collection, setCollection] = useState(data.slice(0, countPerPage));
+
+  const updatePage = (p) => {
+
+    setCurrentPage(p);
+    const to = countPerPage * p;
+    const from = to - countPerPage;
+    setCollection(data.slice(from, to));
+
+  };
+
+  return (
+    <>
+      <Table dataLimit={collection.length} data={collection} />
+
+      <Pagination
+        pageSize={countPerPage}
+        onChange={updatePage}
+        current={currentPage}
+        total={data.length}
+      />
+    </>
+  );
+});
+```
+
+![toggle](images/byop.png)
 
 ## License
 
