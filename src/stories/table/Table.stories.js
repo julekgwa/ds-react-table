@@ -37,7 +37,7 @@ stories.add('Table', () => {
 
   return (
     <Table
-      dataLimit={15}
+      dataLimit={2}
       sort={false}
       showPagination={true}
       data={data}

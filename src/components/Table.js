@@ -149,7 +149,7 @@ export function Table({ data, sort, dataLimit, showPagination, }) {
         </tbody>
       </table>
       { (showPagination && totalPages !== 1) && (
-        <div className='pagination'>
+        <div className='ds-pagination pagination'>
           <a onClick={prevPage} href='#'>
             &laquo;
           </a>

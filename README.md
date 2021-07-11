@@ -26,24 +26,22 @@ import { Table } from 'ds-react-table';
 
 const data = [
   {
-    language: 'JavaScript',
-    level: '5',
+    qualification: 'Software Engineering',
+    school: 'UJ',
+    period: '04/2016 – 08/2018',
+    location: 'JOHANNESBURG, SOUTH AFRICA',
   },
   {
-    language: 'NodeJS',
-    level: '3',
+    qualification: 'PC Technician',
+    school: 'Boston City Campus & business College',
+    period: '01/2011 – 11/2011',
+    location: 'RANDBURG, SOUTH AFRICA',
   },
   {
-    language: 'React',
-    level: '5',
-  },
-  {
-    language: 'React Native',
-    level: '5',
-  },
-  {
-    language: 'Vue',
-    level: '3',
+    qualification: 'UX Designer',
+    school: 'UCT',
+    period: '01/2008 – 12/2010',
+    location: 'CAPE TOWN, SOUTH AFRICA',
   }
 ];
 
@@ -110,7 +108,7 @@ table {
   margin-top: 10px;
 }
 
-a:not(:nth-child(2)) {
+.pagination a:not(:nth-child(2)) {
   background-color: #3B3B3B;
   color: #94ABBE;
 }
@@ -129,7 +127,7 @@ function App() {
   return (
     <div className="App">
       <Table
-        dataLimit={15}
+        dataLimit={2}
         sort={false}
         showPagination={true}
         data={data}

@@ -30,7 +30,7 @@ table {
   margin-top: 10px;
 }
 
-a:not(:nth-child(2)) {
+.pagination a:not(:nth-child(2)) {
   background-color: #3B3B3B;
   color: #94ABBE;
 }
