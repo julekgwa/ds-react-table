@@ -103,14 +103,30 @@ table {
 
 .pagination {
   display: inline-block;
-  background-color: #94ABBE;
-  border: 1px solid #3B3B3B;
+  background-color: white;
+  border: 1px solid #d8cdc9;
   margin-top: 10px;
 }
 
+.pagination a {
+  color: black;
+  float: left;
+  padding: 8px 16px;
+  text-decoration: none;
+}
 .pagination a:not(:nth-child(2)) {
-  background-color: #3B3B3B;
-  color: #94ABBE;
+  background-color: #d8cdc9;
+  color: white;
+}
+
+.pagination a:nth-child(2) {
+  display: inline-block;
+  width: 100px;
+  text-align: center;
+}
+
+.pagination a:nth-child(n+3):nth-last-child(n+2) {
+  cursor: default;
 }
 ```
 
