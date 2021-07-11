@@ -22,10 +22,10 @@
     "url": "git+https://github.com/julekgwa/ds-react-table.git"
   },
   "keywords": [
-    "typing",
-    "react typing animation",
-    "typewriter",
-    "typist",
+    "react table",
+    "simple react table",
+    "table with sort",
+    "table",
     "react"
   ],
   "author": "Junius Lekgwara",
@@ -61,7 +61,8 @@
   },
   "peerDependencies": {
     "react": "^17.0.2",
-    "react-dom": "^17.0.2"
+    "react-dom": "^17.0.2",
+    "prop-types": "15.7.2"
   },
   "husky": {
     "hooks": {

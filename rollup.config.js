@@ -26,6 +26,7 @@ export default [
       }
     ],
     plugins: [
+      resolve(),
       postcss({
         plugins: [],
         minimize: true,
@@ -35,7 +36,6 @@ export default [
         presets: ['@babel/preset-react']
       }),
       external(),
-      resolve(),
       terser()
     ],
     external: ['react', 'react-dom', 'prop-types'],
