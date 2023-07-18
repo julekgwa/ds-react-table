@@ -1,16 +1,9 @@
-import {
-  storiesOf
-} from '@storybook/react';
-
 import React from 'react';
 
-import {
-  Table
-} from '../../index';
+// import './table-st.module.css';
 
-import './table-st.module.css';
-
-const stories = storiesOf('Table', module);
+import { Table as TB } from '../../components/Table';
+import { Meta, StoryObj } from '@storybook/react';
 
 const data = [
   {
@@ -33,15 +26,17 @@ const data = [
   }
 ];
 
-stories.add('Table', () => {
 
-  return (
-    <Table
-      dataLimit={2}
-      sort={false}
-      showPagination={true}
-      data={data}
-    />
-  );
+const meta = {
+  title: 'Basic',
+  component: TB,
+} satisfies Meta<typeof TB>;
 
-});
+export default meta;
+type Story = StoryObj<typeof meta>;
+
+export const Table: Story = {
+  args: {
+    data: data
+  }
+}

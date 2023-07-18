@@ -1,10 +1,10 @@
-const capitalize = (str, lower = false) =>
+const capitalize = (str: string, lower = false) =>
   str &&
   (lower ? str.toLowerCase() : str).replace(/(?:^|\s|["'([{])+\S/g, (match) =>
     match.toUpperCase()
   );
 
-const cleanTableHeader = (header, searchValue = '_') => {
+const cleanTableHeader = (header: string, searchValue = '_') => {
 
   if (!header || typeof header !== 'string') {
 
@@ -18,7 +18,12 @@ const cleanTableHeader = (header, searchValue = '_') => {
 
 };
 
-export const createHeaders = (headersData) => {
+interface IHeader {
+  Header: string;
+  accessor: string;
+}
+
+export const createHeaders = <T>(headersData: T[]): IHeader[] => {
 
   if (
     !Array.isArray(headersData) ||
@@ -29,8 +34,8 @@ export const createHeaders = (headersData) => {
 
   }
 
-  return Object.keys(headersData[0]).map((key) => ({
-    Header: cleanTableHeader(key),
+  return Object.keys(headersData[0] as Array<keyof T>).map((key) => ({
+    Header: cleanTableHeader(key) || '',
     accessor: key,
   }));
 
@@ -54,7 +59,7 @@ function generateGuid() {
 
 }
 
-export function addUniqueKey(array) {
+export function addUniqueKey<T>(array: T[]) {
 
   return array.map((item) => ({
     ...item,
@@ -63,14 +68,14 @@ export function addUniqueKey(array) {
 
 }
 
-export const compare = ( a, b, sortBy, order = 'asc' ) => {
+export const compare = <T>( a: T, b: T, sortBy: string, order = 'asc' ) => {
 
-  if ( a[sortBy] < b[sortBy] ){
+  if ( a[sortBy as keyof T] < b[sortBy as keyof T] ){
 
     return order === 'asc' ? -1 : 1;
 
   }
-  if ( a[sortBy] > b[sortBy] ){
+  if ( a[sortBy as keyof T] > b[sortBy as keyof T] ){
 
     return order === 'asc' ? 1 : -1;
 

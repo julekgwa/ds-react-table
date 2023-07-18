@@ -1,22 +1,28 @@
-import PropTypes from 'prop-types';
-
-import React, {
-  useEffect,
-  useState
-} from 'react';
+import React, { useEffect, useState } from 'react';
 
 import './table.module.css';
 
 import {
   addUniqueKey,
   compare,
-  createHeaders
+  createHeaders,
 } from './utils';
 
-export function Table({ data, sort, dataLimit, showPagination, }) {
+import { IHeader, Props } from '../types';
 
-  const [tableHeaders, setTableHeaders] = useState([]);
-  const [tableData, setTableData] = useState([]);
+export function Table<T>({
+  data,
+  sort = false,
+  dataLimit = 10,
+  showPagination = false,
+  showEdit = false,
+  showRemove = false,
+  onRemove = () => {},
+  onEdit,
+  ...props
+}: Props<T>) {
+  const [tableHeaders, setTableHeaders] = useState<IHeader[]>([]);
+  const [tableData, setTableData] = useState<T[]>([]);
   const [currentSort, setCurrentSort] = useState('');
   const [sortDir, setSortDir] = useState('');
   const [totalPages, setTotalPages] = useState(1);
@@ -25,12 +31,9 @@ export function Table({ data, sort, dataLimit, showPagination, }) {
   const [endIndex, setEndIndex] = useState(dataLimit);
   const [nextButtonText, setNextButtonText] = useState('NEXT');
 
-  const sortTable = (sortBy) => {
-
+  const sortTable = (sortBy: string) => {
     if (!sort) {
-
       return;
-
     }
     const sortDirection =
       sortBy !== currentSort ? 'asc' : sortDir === 'asc' ? 'desc' : 'asc';
@@ -39,17 +42,13 @@ export function Table({ data, sort, dataLimit, showPagination, }) {
     setSortDir(sortDirection);
     setCurrentSort(sortBy);
     setTableData(addUniqueKey(tempData));
-
   };
 
-  const nextPage = (e) => {
-
+  const nextPage = (e: React.MouseEvent<HTMLElement>) => {
     e.preventDefault();
 
     if (currentPage === totalPages) {
-
       return;
-
     }
     const nextPageNumber =
       currentPage < totalPages ? currentPage + 1 : currentPage;
@@ -58,63 +57,46 @@ export function Table({ data, sort, dataLimit, showPagination, }) {
 
     const newTableData = data.slice(nextStartIndex, nextEndIndex);
     if (currentSort) {
-
       newTableData.sort((a, b) => compare(a, b, currentSort, sortDir));
-
     }
     setNextButtonText(nextPageNumber === totalPages ? 'PREV' : 'NEXT');
     setTableData(addUniqueKey(newTableData));
     setCurrentPage(nextPageNumber);
     setStartIndex(nextStartIndex);
     setEndIndex(nextEndIndex);
-
   };
 
-  const prevPage = (e) => {
-
+  const prevPage = (e: React.MouseEvent<HTMLElement>) => {
     e.preventDefault();
     if (currentPage <= 1) {
-
       return;
-
     }
     const nextPageNumber = currentPage - 1;
     const nextStartIndex = startIndex - dataLimit;
     const nextEndIndex = nextPageNumber * dataLimit;
     const newTableData = data.slice(nextStartIndex, nextEndIndex);
     if (currentSort) {
-
       newTableData.sort((a, b) => compare(a, b, currentSort, sortDir));
-
     }
     setNextButtonText(nextPageNumber === 1 ? 'NEXT' : 'PREV');
     setTableData(addUniqueKey(newTableData));
     setCurrentPage(nextPageNumber);
     setStartIndex(nextStartIndex);
     setEndIndex(nextEndIndex);
-
   };
 
-  const nextButton = (e) => {
-
+  const nextButton = (e: React.MouseEvent<HTMLElement>) => {
     if (nextButtonText === 'NEXT') {
-
       nextPage(e);
-
     } else {
-
       prevPage(e);
-
     }
-
-  }
+  };
 
   useEffect(() => {
-
     setTableData(addUniqueKey(data.slice(startIndex, endIndex)));
     setTableHeaders(createHeaders(data));
     setTotalPages(Math.ceil(data.length / dataLimit));
-
   }, [data]);
 
   return (
@@ -140,20 +122,45 @@ export function Table({ data, sort, dataLimit, showPagination, }) {
         </thead>
         <tbody>
           {tableData.map((row, idx) => (
-            <tr key={row.key}>
+            <tr key={idx}>
               {tableHeaders.map((h, i) => (
+                // @ts-ignore
                 <td key={row.key + i}>{tableData[idx][h.accessor]}</td>
               ))}
+
+              {showRemove ||
+                (showEdit && (
+                  <td>
+                    <div className='ds-edit-remove-container'>
+                    {showRemove && (
+                      <div
+                        onClick={() => onRemove(idx, row)}
+                        className='ds-remove-container'
+                      >
+                        {props.deleteComponent}
+                      </div>
+                    )}
+
+                    {showEdit && (
+                      <div className='ds-edit-container'>
+                        {props.editComponent}
+                      </div>
+                    )}
+                    </div>
+                  </td>
+                ))}
             </tr>
           ))}
         </tbody>
       </table>
-      { (showPagination && totalPages !== 1) && (
+      {showPagination && totalPages !== 1 && (
         <div className='ds-pagination pagination'>
           <a onClick={prevPage} href='#'>
             &laquo;
           </a>
-          <a onClick={nextButton} href='#'>{nextButtonText}</a>
+          <a onClick={nextButton} href='#'>
+            {nextButtonText}
+          </a>
           <a onClick={(e) => e.preventDefault()} href=''>
             {currentPage}
           </a>
@@ -170,19 +177,4 @@ export function Table({ data, sort, dataLimit, showPagination, }) {
       )}
     </div>
   );
-
 }
-
-Table.propTypes = {
-  data: PropTypes.array.isRequired,
-  sort: PropTypes.bool,
-  dataLimit: PropTypes.number,
-  showPagination: PropTypes.bool,
-};
-
-Table.defaultProps = {
-  data: [],
-  sort: false,
-  dataLimit: 10,
-  showPagination: false,
-};
