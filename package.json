@@ -4,6 +4,7 @@
   "description": "Dead simple react table",
   "main": "dist/index.js",
   "module": "dist/index.es.js",
+  "types": "dist/index.d.ts",
   "files": [
     "dist/*"
   ],
