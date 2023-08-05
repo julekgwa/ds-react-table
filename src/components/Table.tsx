@@ -2,11 +2,7 @@ import React, { useEffect, useState } from 'react';
 
 import './table.module.css';
 
-import {
-  addUniqueKey,
-  compare,
-  createHeaders,
-} from './utils';
+import { addUniqueKey, compare, createHeaders } from './utils';
 
 import { IHeader, Props } from '../types';
 
@@ -15,10 +11,7 @@ export function Table<T>({
   sort = false,
   dataLimit = 10,
   showPagination = false,
-  showEdit = false,
-  showRemove = false,
-  onRemove = () => {},
-  onEdit,
+  CustomTdComponent,
   ...props
 }: Props<T>) {
   const [tableHeaders, setTableHeaders] = useState<IHeader[]>([]);
@@ -128,27 +121,11 @@ export function Table<T>({
                 <td key={row.key + i}>{tableData[idx][h.accessor]}</td>
               ))}
 
-              {showRemove ||
-                (showEdit && (
-                  <td>
-                    <div className='ds-edit-remove-container'>
-                    {showRemove && (
-                      <div
-                        onClick={() => onRemove(idx, row)}
-                        className='ds-remove-container'
-                      >
-                        {props.deleteComponent}
-                      </div>
-                    )}
-
-                    {showEdit && (
-                      <div className='ds-edit-container'>
-                        {props.editComponent}
-                      </div>
-                    )}
-                    </div>
-                  </td>
-                ))}
+              {CustomTdComponent && (
+                <td>
+                  <CustomTdComponent id={idx} data={row} />
+                </td>
+              )}
             </tr>
           ))}
         </tbody>

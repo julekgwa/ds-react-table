@@ -1,7 +1,9 @@
 import React from 'react';
-
+import {MdDeleteOutline, MdEdit} from 'react-icons/md'
 import { Table as TB } from '../../components/Table';
 import { Meta, StoryObj } from '@storybook/react';
+
+import './custom.module.css'
 
 const data = [
   {
@@ -26,7 +28,7 @@ const data = [
 
 
 const meta = {
-  title: 'Basic',
+  title: 'With custom td',
   component: TB,
 } satisfies Meta<typeof TB>;
 
@@ -35,6 +37,10 @@ type Story = StoryObj<typeof meta>;
 
 export const Table: Story = {
   args: {
-    data: data
+    data: data,
+    CustomTdComponent: () => <div style={{ padding: '0 30px'}}>
+      <MdEdit />
+      <MdDeleteOutline />
+    </div>
   }
 }

@@ -23,6 +23,8 @@ $ yarn add ds-react-table
 import React from 'react';
 
 import { Table } from 'ds-react-table';
+// optional
+import 'ds-react-table/dist/index.css'
 
 const data = [
   {
@@ -71,6 +73,7 @@ export default App;
 | sort        | bool             | false  |  To enable sorting                                       |   |
 | dataLimit       | number             | 10  | The number of items to be shown on each page.                                                    |   |
 | showPagination | bool             | false     | Show/hide pagination                                   |   |
+| CustomTdComponent | React.FC             | null     |A React component to add actions such as edit and deleting                                   |   |
 
 ## Styling the table and pagination
 
@@ -198,6 +201,29 @@ function App() {
 ```
 
 ![toggle](images/byop.png)
+
+## Custom td Component
+You can utilize a ```CustomTdComponent``` to incorporate actions within the table, such as the ability to edit and delete rows.
+
+```typescript
+
+const CustomComponent = ({ id, data }) => {
+  return (
+    <div style={{ padding: '0 30px'}}>
+      <MdEdit onClick={() => editRow(id)} />
+      <MdDeleteOutline onClick={() => deleteRow(id)} />
+    </div>
+    )
+}
+
+ <Table
+    dataLimit={collection.length}
+    data={collection}
+    CustomTdComponent={CustomComponent}
+  />
+ ```
+
+![toggle](images/custom.png)
 
 ## License
 

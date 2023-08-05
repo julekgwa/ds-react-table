@@ -1,11 +1,20 @@
-import resolve from "@rollup/plugin-node-resolve";
 import commonjs from "@rollup/plugin-commonjs";
+
+import resolve from "@rollup/plugin-node-resolve";
+
 import typescript from '@rollup/plugin-typescript';
-import dts from "rollup-plugin-dts";
-import { terser } from "rollup-plugin-terser";
-import postcss from 'rollup-plugin-postcss-modules'
-import peerDepsExternal from "rollup-plugin-peer-deps-external";
+
 import autoprefixer from 'autoprefixer'
+
+import dts from "rollup-plugin-dts";
+
+import peerDepsExternal from "rollup-plugin-peer-deps-external";
+
+import postcss from 'rollup-plugin-postcss'
+
+import {
+  terser
+} from "rollup-plugin-terser";
 
 export default [
   {
@@ -22,7 +31,7 @@ export default [
         file: 'dist/index.es.js',
         format: "esm",
         sourcemap: true,
-      },
+      }
     ],
     plugins: [
       postcss({
@@ -31,17 +40,22 @@ export default [
         writeDefinitions: true,
         // modules: { ... }
       }),
-      typescript({ tsconfig: "./tsconfig.json" }),
+      typescript({
+        tsconfig: "./tsconfig.json",
+      }),
       peerDepsExternal(),
       resolve(),
       commonjs(),
-      terser(),
+      terser()
     ],
     external: ["react", "react-dom"],
   },
   {
     input: "src/index.ts",
-    output: [{ file: "dist/types.d.ts", format: "es" }],
+    output: [{
+      file: "dist/types.d.ts",
+      format: "es",
+    }],
     plugins: [dts()],
-  },
+  }
 ];

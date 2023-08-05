@@ -3,12 +3,7 @@ export interface Props<T> {
   sort?: boolean;
   dataLimit?: number;
   showPagination?: boolean;
-  showEdit?: false;
-  showRemove?: false;
-  deleteComponent?: React.ReactNode;
-  editComponent?: React.ReactNode;
-  onRemove?: (id: string | number, data: T) => void;
-  onEdit?: (id: string | number, data: T) => void;
+  CustomTdComponent?: React.FC<{id: number | string, data: T}>;
 }
 
 export interface IHeader {
