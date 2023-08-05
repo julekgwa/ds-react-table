@@ -3,6 +3,7 @@ export interface Props<T> {
   sort?: boolean;
   dataLimit?: number;
   showPagination?: boolean;
+  customTdHeader?: string;
   CustomTdComponent?: React.FC<{id: number | string, data: T}>;
 }
 

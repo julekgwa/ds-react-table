@@ -23,7 +23,7 @@ interface IHeader {
   accessor: string;
 }
 
-export const createHeaders = <T>(headersData: T[]): IHeader[] => {
+export const createHeaders = <T>(headersData: T[], customHeader?: string): IHeader[] => {
 
   if (
     !Array.isArray(headersData) ||
@@ -34,10 +34,19 @@ export const createHeaders = <T>(headersData: T[]): IHeader[] => {
 
   }
 
-  return Object.keys(headersData[0] as Array<keyof T>).map((key) => ({
+  const headers = Object.keys(headersData[0] as Array<keyof T>).map((key) => ({
     Header: cleanTableHeader(key) || '',
     accessor: key,
   }));
+
+  if (customHeader) {
+    headers.push({
+      Header: customHeader,
+      accessor: ''
+    })
+  }
+
+  return headers
 
 };
 

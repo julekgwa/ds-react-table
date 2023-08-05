@@ -12,6 +12,7 @@ export function Table<T>({
   dataLimit = 10,
   showPagination = false,
   CustomTdComponent,
+  customTdHeader,
   ...props
 }: Props<T>) {
   const [tableHeaders, setTableHeaders] = useState<IHeader[]>([]);
@@ -88,7 +89,7 @@ export function Table<T>({
 
   useEffect(() => {
     setTableData(addUniqueKey(data.slice(startIndex, endIndex)));
-    setTableHeaders(createHeaders(data));
+    setTableHeaders(createHeaders(data, customTdHeader));
     setTotalPages(Math.ceil(data.length / dataLimit));
   }, [data]);
 
@@ -118,7 +119,7 @@ export function Table<T>({
             <tr key={idx}>
               {tableHeaders.map((h, i) => (
                 // @ts-ignore
-                <td key={row.key + i}>{tableData[idx][h.accessor]}</td>
+                tableData[idx][h.accessor] && <td key={row.key + i}>{tableData[idx][h.accessor]}</td>
               ))}
 
               {CustomTdComponent && (

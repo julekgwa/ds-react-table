@@ -73,7 +73,9 @@ export default App;
 | sort        | bool             | false  |  To enable sorting                                       |   |
 | dataLimit       | number             | 10  | The number of items to be shown on each page.                                                    |   |
 | showPagination | bool             | false     | Show/hide pagination                                   |   |
-| CustomTdComponent | React.FC             | null     |A React component to add actions such as edit and deleting                                   |   |
+| CustomTdComponent | React.FC             | false     |A React component to add actions such as edit and deleting                                   |   |
+| customTdHeader | string             | false     | Header of the custom td                                   |   |
+
 
 ## Styling the table and pagination
 

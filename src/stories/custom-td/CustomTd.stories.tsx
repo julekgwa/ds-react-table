@@ -38,6 +38,7 @@ type Story = StoryObj<typeof meta>;
 export const Table: Story = {
   args: {
     data: data,
+    customTdHeader: 'Actions',
     CustomTdComponent: () => <div style={{ padding: '0 30px'}}>
       <MdEdit />
       <MdDeleteOutline />
